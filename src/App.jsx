@@ -17,7 +17,7 @@ export default function App() {
       Outside of coding, I’m passionate about financial planning, fitness, 
       and creative side projects that blend tech with everyday life.`,
     photo:
-      "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
+      "https://wvaicvbgat0ui7fr.public.blob.vercel-storage.com/IMG_20250101_162016-D0OQ95HnkqaxAgEpVrpo1AQlU8CpHc.jpg?q=80&w=1200&auto=format&fit=crop",
     contacts: [
       { label: "Email", href: "mailto:khalidalasad03@gmail.com", icon: MailIcon },
       { label: "LinkedIn", href: "https://linkedin.com/in/khalid-al-asad", icon: LinkedInIcon },
@@ -36,7 +36,7 @@ export default function App() {
           <img
             src={profile.photo}
             alt={profile.name}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover object-[center_35%]"
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-violet-700/40 via-indigo-600/30 to-transparent mix-blend-multiply" />
         </div>

@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-/** Utility: get initial dark mode from localStorage or system */
+/** Initial theme from localStorage or system preference */
 function getInitialDarkMode() {
   if (typeof window === "undefined") return false;
   const saved = localStorage.getItem("theme");
-  if (saved) return saved === "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark") return true;
+  if (saved === "light") return false;
+  return window.matchMedia?.("(prefers-color-scheme: dark)").matches ?? false;
 }
 
 export default function App() {
   const [darkMode, setDarkMode] = useState(getInitialDarkMode);
+  // overlay: { x, y, r, colorClass } | null
+  const [overlay, setOverlay] = useState(null);
+  const btnRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
@@ -41,20 +45,63 @@ export default function App() {
 
   const bioParagraphs = profile.bio.split("\n\n");
 
+  /** Trigger circular EXPAND wipe from the button, behind the card */
+  const triggerThemeChange = () => {
+    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    // Button center (viewport coords)
+    const rect = btnRef.current?.getBoundingClientRect();
+    const x = (rect?.left ?? 0) + (rect?.width ?? 0) / 2;
+    const y = (rect?.top ?? 0) + (rect?.height ?? 0) / 2;
+
+    // Radius large enough to cover viewport
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const maxDx = Math.max(x, vw - x);
+    const maxDy = Math.max(y, vh - y);
+    const r = Math.hypot(maxDx, maxDy);
+
+    // Flip theme immediately so the card updates now
+    const toDark = !darkMode;
+    setDarkMode(toDark);
+
+    if (reduce) return; // no animation for reduced-motion users
+
+    // Overlay uses the NEW theme color and expands from the button
+    const newColor = toDark ? "bg-slate-900" : "bg-slate-100";
+    setOverlay({ x, y, r, colorClass: newColor });
+  };
+
+  const onOverlayEnd = () => setOverlay(null);
+
   return (
     <div className={darkMode ? "dark" : ""}>
-      <div className="min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-300">
-        <div className="relative w-[360px] bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden transition-colors duration-300">
-          {/* Dark Mode Toggle */}
+      {/* Full-screen expanding circle overlay, BEHIND the card */}
+      {overlay && (
+        <div
+          className={`fixed inset-0 z-[1] pointer-events-none ${overlay.colorClass} animate-theme-bubble-grow`}
+          style={{
+            "--x": `${overlay.x}px`,
+            "--y": `${overlay.y}px`,
+            "--r": `${overlay.r}px`,
+          }}
+          onAnimationEnd={onOverlayEnd}
+        />
+      )}
+
+      <div className="relative min-h-screen bg-slate-100 dark:bg-slate-900 flex items-center justify-center p-6 transition-colors duration-300">
+        <div className="relative z-[2] w-[360px] bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden transition-colors duration-300">
+          {/* Toggle */}
           <button
+            ref={btnRef}
             aria-label="Toggle dark mode"
             aria-pressed={darkMode}
-            onClick={() => setDarkMode((v) => !v)}
+            onClick={triggerThemeChange}
             className="absolute right-3 top-3 z-10 inline-flex items-center justify-center h-10 w-10 rounded-full
                        bg-white/70 dark:bg-slate-700/70 backdrop-blur ring-1 ring-black/5 dark:ring-white/10
                        text-slate-700 dark:text-slate-100 hover:scale-105 active:scale-95 transition-all duration-300"
           >
-            {/* Moon icon for light mode */}
+            {/* Moon (visible in light) */}
             <span
               className={`absolute transition-all duration-500 ${
                 darkMode ? "opacity-0 -rotate-90 scale-75" : "opacity-100 rotate-0 scale-100"
@@ -62,7 +109,7 @@ export default function App() {
             >
               <MoonIcon className="w-5 h-5" />
             </span>
-            {/* Sun icon for dark mode */}
+            {/* Sun (visible in dark) */}
             <span
               className={`absolute transition-all duration-500 ${
                 darkMode ? "opacity-100 rotate-0 scale-100" : "opacity-0 rotate-90 scale-75"
@@ -89,12 +136,14 @@ export default function App() {
             </h2>
             <p className="mt-1 text-sm text-slate-400 dark:text-slate-300">{profile.title}</p>
 
+            {/* Bio */}
             <div className="mt-5 space-y-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
               {bioParagraphs.map((para, idx) => (
                 <p key={idx}>{para.trim()}</p>
               ))}
             </div>
 
+            {/* Contacts */}
             <div className="mt-6 flex items-center gap-4 text-slate-400 dark:text-slate-300">
               {profile.contacts.map((c) => (
                 <a
@@ -116,7 +165,7 @@ export default function App() {
   );
 }
 
-/* ==== Icon Components ==== */
+/* ==== SVG Icon Components ==== */
 function MailIcon(props) {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>

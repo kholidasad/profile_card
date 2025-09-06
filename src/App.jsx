@@ -2,18 +2,31 @@ import React from "react";
 
 export default function App() {
   const profile = {
-    name: "Cayce Pollard",
-    title: "Multiverse Analyst",
-    bio: "Lorem ipsum dolor ex magna. Interdum malesuada fames ac ante ipsum amet et faucibus. Pellentesque et venenatis dolor imperdiet lorem dolor mattis lorem sagittis.",
+    name: "Khalid Al Asad",
+    title: "Backend Developer | Cloud Enthusiast",
+    bio: `I’m a backend-focused software engineer with 3+ years of experience 
+      building and maintaining scalable systems using PHP (Laravel/OctoberCMS), 
+      Golang (Gin/Fiber), and Node.js (Express/Nest).
+
+      My expertise spans API development, database design (MySQL/MongoDB), 
+      and cloud infrastructure (AWS, Docker, Nginx, CI/CD).
+
+      I enjoy solving complex problems, automating workflows, 
+      and continuously learning new technologies.
+
+      Outside of coding, I’m passionate about financial planning, fitness, 
+      and creative side projects that blend tech with everyday life.`,
     photo:
       "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?q=80&w=1200&auto=format&fit=crop",
     contacts: [
       { label: "Email", href: "mailto:khalidalasad03@gmail.com", icon: MailIcon },
-      { label: "Phone", href: "tel:+62123456789", icon: PhoneIcon },
-      { label: "Telegram", href: "https://t.me/username", icon: TelegramIcon },
-      { label: "Twitter", href: "https://x.com", icon: XIcon },
+      { label: "LinkedIn", href: "https://linkedin.com/in/khalid-al-asad", icon: LinkedInIcon },
+      { label: "GitHub", href: "https://github.com/kholidasad", icon: GitHubIcon },
     ],
   };
+
+  // Split bio into paragraphs
+  const bioParagraphs = profile.bio.split("\n\n");
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
@@ -32,7 +45,17 @@ export default function App() {
         <div className="p-7">
           <h2 className="text-2xl font-semibold text-slate-700">{profile.name}</h2>
           <p className="mt-1 text-sm text-slate-400">{profile.title}</p>
-          <p className="mt-5 text-sm leading-relaxed text-slate-500">{profile.bio}</p>
+
+          {/* Bio with paragraphs */}
+          <div className="mt-5 space-y-3 text-sm leading-relaxed text-slate-500">
+            {bioParagraphs.map((para, idx) => (
+              <p
+                key={idx}
+              >
+                {para.trim()}
+              </p>
+            ))}
+          </div>
 
           {/* Icons */}
           <div className="mt-6 flex items-center gap-4 text-slate-400">
@@ -58,33 +81,41 @@ export default function App() {
 /* ==== SVG Icon Components ==== */
 function MailIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
       <rect x="3" y="5" width="18" height="14" rx="2" />
       <path d="m3 7 9 6 9-6" />
     </svg>
   );
 }
 
-function PhoneIcon(props) {
+function LinkedInIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M22 16.92v2a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.1 6.18 2 2 0 0 1 4.11 4h2a2 2 0 0 1 2 1.72c.12.9.33 1.77.64 2.6a2 2 0 0 1-.45 2.11L7.09 11a16 16 0 0 0 6 6l.57-1.21a2 2 0 0 1 2.11-.45c.83.31 1.7.52 2.6.64A2 2 0 0 1 22 16.92z" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M4.98 3.5C4.98 4.88 3.87 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM0 8h5v15H0V8zm7.5 0h4.8v2.1h.1c.7-1.3 2.4-2.7 4.9-2.7 5.2 0 6.2 3.3 6.2 7.6V23h-5v-7.3c0-1.7 0-3.9-2.4-3.9s-2.8 1.9-2.8 3.8V23h-5V8z"/>
     </svg>
   );
 }
 
-function TelegramIcon(props) {
+function GitHubIcon(props) {
   return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M9.9 15.6 9.7 20a1 1 0 0 0 1.6.8l2.3-1.7 4.7 3.4c.8.6 1.9.1 2.1-.9l3.6-16.9c.2-1-1-1.8-1.9-1.3L1.5 9.7c-1 .5-.8 2 .3 2.2l6.4 1.4 12.6-7.6-10.9 9.9Z" />
-    </svg>
-  );
-}
-
-function XIcon(props) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" {...props}>
-      <path d="M4 4l16 16M20 4 4 20" />
+    <svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      {...props}
+    >
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.44 9.8 8.2 11.39.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.41-1.34-1.79-1.34-1.79-1.1-.76.08-.74.08-.74 1.22.09 1.87 1.25 1.87 1.25 1.08 1.85 2.83 1.31 3.52 1 .11-.78.42-1.31.76-1.61-2.67-.31-5.47-1.34-5.47-5.95 0-1.31.47-2.38 1.24-3.22-.12-.31-.54-1.55.12-3.23 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 013 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.68.24 2.92.12 3.23.77.84 1.24 1.91 1.24 3.22 0 4.62-2.81 5.64-5.49 5.94.43.38.82 1.13.82 2.28v3.38c0 .32.22.7.82.58C20.56 21.8 24 17.3 24 12c0-6.63-5.37-12-12-12z"/>
     </svg>
   );
 }
